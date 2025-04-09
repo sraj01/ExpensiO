@@ -1,15 +1,61 @@
+# 👉 Android Studio specific
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+*.iws
+*.ipr
+
+# 👉 Build outputs
+/build/
+*/build/
+
+# 👉 Gradle files
+.gradle/
 local.properties
+**/gradle-wrapper.jar
+
+# 👉 Signing keys or secrets
+*.jks
+*.keystore
+**/key.properties
+
+# 👉 Logs and reports
+*.log
+*.stacktrace
+*.hprof
+
+# 👉 Crash logs & coverage
+captures/
+output.json
+*.ec
+
+# 👉 OS/system junk
+.DS_Store
+Thumbs.db
+
+# 👉 Testing & reports
+test-output/
+*.xml
+
+# 👉 Jetpack Compose previews
+.idea/preview.html
+
+# 👉 Caches & compiled files
+.cache/
+.kotlinc/
+
+# 👉 Node/JS stuff (if using Firebase or WebView)
+node_modules/
+npm-debug.log
+
+# 👉 Flutter/Dart (optional)
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# 👉 Misc
+*.swp
+*.bak
+*.tmp
+*.orig
+
+# 👉 VS Code (if using)
+.vscode/
