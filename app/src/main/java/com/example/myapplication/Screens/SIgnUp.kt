@@ -22,14 +22,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.myapplication.Screens.BlobBackground
+import com.example.myapplication.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import org.checkerframework.checker.units.qual.Length
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignupScreen(navController: NavController) {
+fun SignupScreen(navController: NavController,viewModel: UserViewModel= viewModel()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -95,31 +97,13 @@ fun SignupScreen(navController: NavController) {
 
         Button(
             onClick = {
-                if (password != confirmPassword) {
-                    errorMessage = "Passwords do not match"
+               val success =viewModel.signUp(password,confirmPassword,email,context)
+                if(success){
+                    //TODO navigate
+                }else{
+                    Toast.makeText(context,"SignUp failed", Toast.LENGTH_SHORT).show()
                 }
 
-                    else if (email.isBlank() || password.isBlank()|| confirmPassword.isBlank())
-
-                    {
-                        Toast.makeText(context, "Email Or password cannot be empty", Toast.LENGTH_SHORT).show()
-                        return@Button
-                    }
-
-                 else {
-                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                navController.navigate("login") {
-                                    popUpTo("signup") { inclusive = true }
-                                    Toast.makeText(context,"Signup Successful",Toast.LENGTH_SHORT).show()
-
-                                }
-                            } else {
-                                Toast.makeText(context,"signup failed",Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                }
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF4CAF50),
