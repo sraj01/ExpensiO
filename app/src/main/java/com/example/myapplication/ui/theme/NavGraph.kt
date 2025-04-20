@@ -26,7 +26,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable("settings"){SettingsScreen(navController)}
         composable("about"){AboutScreen(navController)}
         composable("newTransaction"){ AddTransactionScreen (navController, onCancel = {navController.popBackStack()},
-        )}
+      onSave =   )}
     }
 }
 
