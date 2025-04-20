@@ -1,9 +1,10 @@
 package com.example.myapplication.Screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,42 +56,63 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.myapplication.R
+import com.example.myapplication.UserProfile
+import com.example.myapplication.UserViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 
 
 @Composable
-fun DrawerHeader() {
+fun DrawerHeader(profile: UserProfile?) {
     Column(
-        modifier = Modifier
+        Modifier
             .fillMaxWidth()
             .background(Color(0xFF06402B))
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.splash_logo),
-            contentDescription = "Profile Image",
-            modifier = Modifier
+        if (!profile?.profilePictureUrl.isNullOrEmpty()) {
+            AsyncImage(
+                model = profile!!.profilePictureUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, Color.White, CircleShape),
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.ic_home_black_24dp),
+                error = painterResource(R.drawable.baseline_settings_24)
+            )
+        } else {
+            Box(Modifier
                 .size(80.dp)
                 .clip(CircleShape)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+                .background(Color.Gray))
+        }
+
+        Spacer(Modifier.height(8.dp))
         Text(
-            text = "Shivam Raj",
+            text = profile?.name ?: "Loading...",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
     }
 }
+
 
 @Composable
 fun DrawerItem(title: String, iconRes: Int,onClick: () -> Unit ,scope: CoroutineScope,
@@ -124,9 +148,10 @@ fun DrawerItem(title: String, iconRes: Int,onClick: () -> Unit ,scope: Coroutine
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController,userViewModel: UserViewModel = viewModel()) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val profile by userViewModel.profile.collectAsState()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -134,7 +159,7 @@ fun HomeScreen(navController: NavController) {
             ModalDrawerSheet(
                 modifier = Modifier.width(250.dp).background(Color(0xFF50BB77))
             ) {
-                DrawerHeader()
+                DrawerHeader(profile)
                 DrawerItem("Home", R.drawable.baseline_home_24, { navController.navigate("home") }, scope, drawerState)
 
                 DrawerItem("Settings", R.drawable.baseline_settings_24, { navController.navigate("settings") }, scope, drawerState)
@@ -153,7 +178,7 @@ fun HomeScreen(navController: NavController) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Spacer(modifier = Modifier.weight(1f))
-                            Text(text = "Hello User", fontWeight = FontWeight.Bold)
+                            Text(text = "Hello ${profile?.name ?: "User"}", fontWeight = FontWeight.Bold)
                             Spacer(modifier = Modifier.weight(2f))
                         }
                     },
@@ -507,7 +532,7 @@ data class Expense(
 )
 enum class ExpenseCategory(val displayName: String) {
     ALL("ALL"),
-    FOOD("Food & Dining"),
+    FOOD("Food & Drink"),
     TRANSPORT("Transport"),
     ENTERTAINMENT("Entertainment"),
     SHOPPING("Shopping"),

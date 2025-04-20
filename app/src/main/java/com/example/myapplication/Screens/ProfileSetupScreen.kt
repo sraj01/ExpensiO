@@ -44,6 +44,8 @@ fun ProfileSetupScreen(navController: NavController) {
     var profileImageUri by remember { mutableStateOf<Uri?>(null) }
     var isUploading by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
+    var profileUrl by remember { mutableStateOf("") }       // ← Add this
+
 
     // Image picker launcher using ActivityResultContracts.GetContent
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -139,18 +141,21 @@ fun ProfileSetupScreen(navController: NavController) {
                     val profilePicRef = storageRef.child("profilePics/$userId.jpg")
 
                     profilePicRef.putFile(profileImageUri!!)
-                        .addOnSuccessListener  { uri ->
-                        isUploading = false
-                        // Directly save the user profile with the download URL
-                        saveUserProfile(userId, userName, phoneNumber, uri.toString(), navController, context)
-                    }
-
-                        .addOnFailureListener { exception ->
-                                Toast.makeText(context, "Download URL error: ${exception.message}", Toast.LENGTH_SHORT).show()
-
+                        .addOnSuccessListener {
+                            // Upload succeeded—now get the real download URL
+                            profilePicRef.downloadUrl
+                                .addOnSuccessListener { uri ->
+                                    profileUrl = uri.toString()   // ✔️ this is the actual URL
+                                    saveUserProfile(userId, userName, phoneNumber, profileUrl, navController, context)
+                                }
+                                .addOnFailureListener { err ->
+                                    // Handle error getting the URL
+                                    Toast.makeText(context, "Failed to get image URL: ${err.message}", Toast.LENGTH_SHORT).show()
+                                }
                         }
-                        .addOnFailureListener { exception ->
-                            Toast.makeText(context, "Image upload failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+                        .addOnFailureListener { err ->
+                            // Handle upload error
+                            Toast.makeText(context, "Image upload failed: ${err.message}", Toast.LENGTH_SHORT).show()
                         }
 
                 } else {
