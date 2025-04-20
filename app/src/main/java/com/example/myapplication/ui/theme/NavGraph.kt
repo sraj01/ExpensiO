@@ -4,14 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.myapplication.Screens.AboutScreen
-import com.example.myapplication.Screens.AddTransactionScreen
-import com.example.myapplication.Screens.NewTransaction
-import com.example.myapplication.Screens.HomeScreen
-import com.example.myapplication.Screens.LoginScreen
-import com.example.myapplication.Screens.AddTransactionScreen
-import com.example.myapplication.Screens.ProfileSetupScreen
-import com.example.myapplication.Screens.SettingsScreen
+import com.example.myapplication.screens.AboutScreen
+import com.example.myapplication.screens.AddTransactionScreen
+import com.example.myapplication.screens.HomeScreen
+import com.example.myapplication.screens.LoginScreen
+import com.example.myapplication.screens.ProfileSetupScreen
+import com.example.myapplication.screens.SettingsScreen
 import com.example.myapplication.ui.Screens.SignupScreen
 import com.google.firebase.auth.FirebaseAuth
 

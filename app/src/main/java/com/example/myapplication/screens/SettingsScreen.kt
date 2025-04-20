@@ -1,4 +1,4 @@
-package com.example.myapplication.Screens
+package com.example.myapplication.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

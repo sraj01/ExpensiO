@@ -1,7 +1,5 @@
-package com.example.myapplication.Screens
+package com.example.myapplication.screens
 
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -45,7 +43,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,10 +64,6 @@ import coil.compose.AsyncImage
 import com.example.myapplication.R
 import com.example.myapplication.UserProfile
 import com.example.myapplication.UserViewModel
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

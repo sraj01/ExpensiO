@@ -1,4 +1,4 @@
-package com.example.myapplication.Screens
+package com.example.myapplication.screens
 // ProfileSetupScreen.kt
 
 
